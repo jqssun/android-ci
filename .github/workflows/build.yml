@@ -1,0 +1,81 @@
+name: Build APK
+
+env:
+  debug: true
+
+on:
+  push:
+    paths:
+      - app/**.sh
+  workflow_dispatch:
+    inputs:
+      app_id:
+        description: 'Application ID'
+        required: true
+        type: string
+  # schedule:
+  #   - cron: '0 0 1 */2 *'
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.check.outputs.target }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set TAG
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "app_id=$(echo '${{ inputs.app_id }}')" >> $GITHUB_ENV
+    
+      - name: Set TAG
+        if: github.event_name == 'push' && contains(github.event.head_commit.message, 'app:')
+        run: |
+          echo "app_id=$(echo '${{ github.event.head_commit.message }}' | grep -oP 'app:\K.*' | xargs)" >> $GITHUB_ENV
+
+      - name: Check
+        id: check
+        run: |
+          if [ -z "${{ env.app_id }}" ] || [ "${{ env.app_id }}" == "all" ]; then
+            output="{\"target\":$(find app -name '*.sh' -exec basename {} .sh \; | jq -R -s -c 'split("\n")[:-1]')}"
+            echo "target=$output" >> $GITHUB_OUTPUT
+          else
+            echo "target={\"target\":[\"${{ env.app_id }}\"]}" >> $GITHUB_OUTPUT
+          fi
+
+  publish:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{fromJson(needs.setup.outputs.matrix)}}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set ENV
+        run: | 
+          chmod +x *.sh;
+          chmod +x app/*.sh;
+          echo "date_today=$(date +'%Y%m%d')" >> $GITHUB_ENV
+
+      - name: Use JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17' # 21
+    
+      - name: Build
+        env:
+            LOCAL_TEST_JKS: ${{ secrets.LOCAL_TEST_JKS }}
+            STORE_TEST_JKS: ${{ secrets.STORE_TEST_JKS }}
+        run: |
+          ./build.sh ${{ matrix.target }}
+
+      - name: Publish
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: "${{ matrix.target }} (${{ env.date_today }})"
+          tag_name: ${{ matrix.target }}
+          files: |
+            out/${{ matrix.target }}.apk
