@@ -42,6 +42,9 @@ update_metadata() {
     sed -i "s/\${{COMMIT}}/$COMMIT/g" .fdroid.yml
     sed -i "s/\${{SUBDIR}}/$SUBDIR/g" .fdroid.yml
     sed -i "s/\${{FLAVOR}}/$FLAVOR/g" .fdroid.yml
+    if ! [ -z $SUBMOD ]; then
+        sed -i "s/submodules: false/submodules: true/g" .fdroid.yml
+    fi
 }
 
 publish() {
