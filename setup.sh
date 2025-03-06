@@ -26,8 +26,8 @@ if [ $(uname) == "Linux" ]; then
         sudo ln -s $(pwd)/fdroidserver/fdroid /usr/local/bin
     fi
 elif [ $(uname) == "Darwin" ]; then
+    pip uninstall --yes sdkmanager
     rm -f $(conda info --base)/bin/fdroid
     ln -s $(pwd)/fdroidserver/fdroid $(conda info --base)/bin
-    export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
     # mamba install gnupg
 fi
