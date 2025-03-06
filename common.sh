@@ -3,6 +3,8 @@ SCRIPT_DIR=$(realpath $(dirname $0))
 set_dir() {
     rm -rf $SCRIPT_DIR/.tmp $SCRIPT_DIR/out
     mkdir -p $SCRIPT_DIR/.tmp $SCRIPT_DIR/out
+    wget ${REPO%.git}/archive/$COMMIT.zip
+    mv $COMMIT.zip $SCRIPT_DIR/out/$ID.zip
     git clone --recurse-submodules --depth 1 $REPO $SCRIPT_DIR/.tmp/$ID
     cd $SCRIPT_DIR/.tmp/$ID
 }

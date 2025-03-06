@@ -79,3 +79,4 @@ jobs:
           tag_name: ${{ matrix.target }}
           files: |
             out/${{ matrix.target }}.apk
+            out/${{ matrix.target }}.zip

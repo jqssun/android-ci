@@ -28,4 +28,6 @@ if [ $(uname) == "Linux" ]; then
 elif [ $(uname) == "Darwin" ]; then
     rm -f $(conda info --base)/bin/fdroid
     ln -s $(pwd)/fdroidserver/fdroid $(conda info --base)/bin
+    export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
+    # mamba install gnupg
 fi
