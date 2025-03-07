@@ -20,7 +20,8 @@ set_dir() {
     mkdir -p $SCRIPT_DIR/.tmp $SCRIPT_DIR/out
     # wget ${REPO%.git}/archive/$COMMIT.zip
     # mv $COMMIT.zip $SCRIPT_DIR/out/$ID.zip
-    git clone --recurse-submodules --shallow-submodules --depth 1 --branch $COMMIT --single-branch $REPO $SCRIPT_DIR/.tmp/$ID
+    git clone --depth 1 --branch $COMMIT --single-branch $REPO $SCRIPT_DIR/.tmp/$ID # fdroid hanles submodules
+    # git clone --recurse-submodules --shallow-submodules --depth 1 --branch $COMMIT --single-branch $REPO $SCRIPT_DIR/.tmp/$ID
     cd $SCRIPT_DIR/.tmp/$ID
     git archive --format=tar.gz $COMMIT > $SCRIPT_DIR/out/$ID.tar.gz
 }
