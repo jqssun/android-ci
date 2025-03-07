@@ -22,6 +22,7 @@ fi
 pip install git+https://gitlab.com/fdroid/fdroidserver; pip uninstall --yes fdroidserver 
 # pip-autoremove fdroidserver
 git clone --recurse-submodules --depth 1 https://gitlab.com/fdroid/fdroidserver
+rm -rf fdroidserver/.git
 if [ $(uname) == "Linux" ]; then
     if [ $(lsb_release -is) == "Ubuntu" ]; then
         sudo ln -s $(pwd)/fdroidserver/fdroid /usr/local/bin
