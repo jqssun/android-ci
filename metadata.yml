@@ -4,7 +4,7 @@ Builds:
   - versionName: "0.1"
     versionCode: 1
     novcheck: true
-    submodules: true
+    submodules: false
     commit: ${{COMMIT}}
     subdir: ${{SUBDIR}}
     gradle:
