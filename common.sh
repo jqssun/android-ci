@@ -3,6 +3,7 @@ SCRIPT_DIR=$(realpath $(dirname $0))
 if [ $(uname) == "Darwin" ]; then
     export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
     export PATH=$(brew --prefix)/opt/gsed/libexec/gnubin:$PATH
+    export PATH=$(brew --prefix)/opt/openjdk@17/bin:$PATH
 fi
 
 replace() {
@@ -13,6 +14,20 @@ replace() {
 rename() {
     export org=$1 new=$2
     find . -name "*$org*" -exec bash -c 'mv "$1" "${1/$org/$new}"' -- {} \;
+}
+
+use_jdk8() {
+    if [ $(uname) == "Linux" ]; then
+        if [ $(lsb_release -is) == "Ubuntu" ]; then
+            sudo umount /opt/hostedtoolcache
+            sudo apt install -y openjdk-8-jdk
+            sudo update-alternatives --set java $(update-alternatives --list java | grep "java-8")
+            export PATH=/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH
+            export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+        fi
+    elif [ $(uname) == "Darwin" ]; then
+        export PATH=$(brew --prefix)/opt/openjdk@8/bin:$PATH CPPFLAGS="-I$(brew --prefix)/opt/openjdk@8/include"
+    fi
 }
 
 set_dir() {
