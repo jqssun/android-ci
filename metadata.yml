@@ -1,0 +1,10 @@
+RepoType: git
+
+Builds:
+  - versionName: "0.1"
+    versionCode: 1
+    novcheck: true
+    commit: ${{COMMIT}}
+    subdir: ${{SUBDIR}}
+    gradle:
+      - ${{FLAVOR}}
