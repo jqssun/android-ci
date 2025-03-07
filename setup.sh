@@ -4,7 +4,8 @@ if [ $(uname) == "Linux" ]; then
     if [ $(lsb_release -is) == "Ubuntu" ]; then
         echo "Running on Ubuntu"
         sudo apt update
-        # sudo apt install -y openjdk-17-jdk-headless 
+        # sudo apt install -y openjdk-17-jdk-headless
+        # sudo update-alternatives --set java $(update-alternatives --list java | grep "java-17")
         sudo apt install -y aapt apksigner # git bat dexdump dos2unix unzip python3-pip
     fi
     ANDROID_HOME="/opt/android-sdk"
