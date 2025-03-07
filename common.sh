@@ -1,5 +1,20 @@
 SCRIPT_DIR=$(realpath $(dirname $0))
 
+if [ $(uname) == "Darwin" ]; then
+    export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
+    export PATH=$(brew --prefix)/opt/gsed/libexec/gnubin:$PATH
+fi
+
+replace() {
+    export org=$1 new=$2
+    find . -type f -exec sed -i 's@'$org'@'$new'@g' {} \;
+}
+
+rename() {
+    export org=$1 new=$2
+    find . -name "*$org*" -exec bash -c 'mv "$1" "${1/$org/$new}"' -- {} \;
+}
+
 set_dir() {
     rm -rf $SCRIPT_DIR/.tmp $SCRIPT_DIR/out
     mkdir -p $SCRIPT_DIR/.tmp $SCRIPT_DIR/out
