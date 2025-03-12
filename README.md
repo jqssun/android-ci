@@ -1,7 +1,7 @@
 # Android CI
 
-[![build](https://img.shields.io/github/actions/workflow/status/jqssun/android-ci/build.yml)](https://github.com/jqssun/android-ci/actions/workflows/build.yml)
 [![license](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/jqssun/android-ci/blob/master/LICENSE)
+[![build](https://img.shields.io/github/actions/workflow/status/jqssun/android-ci/build.yml)](https://github.com/jqssun/android-ci/actions/workflows/build.yml)
 
 A minimal build system to assemble [reproducible builds](https://reproducible-builds.org/) for a curated set of Android applications.
 
