@@ -5,7 +5,7 @@ SUBDIR="app"
 FLAVOR="yes"
 
 build_init() {
-    use_jdk8
+    use_jdk 8
 }
 
 # https://naehrdine.blogspot.com/2021/01/broadcom-bluetooth-unpatching.html

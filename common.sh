@@ -16,17 +16,18 @@ rename() {
     find . -name "*$org*" -exec bash -c 'mv "$1" "${1/$org/$new}"' -- {} \;
 }
 
-use_jdk8() {
+use_jdk() {
+    ver=$1
     if [ $(uname) == "Linux" ]; then
         if [ $(lsb_release -is) == "Ubuntu" ]; then
             sudo umount /opt/hostedtoolcache
-            sudo apt install -y openjdk-8-jdk
-            sudo update-alternatives --set java $(update-alternatives --list java | grep "java-8")
-            export PATH=/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH
-            export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+            sudo apt install -y openjdk-$ver-jdk
+            sudo update-alternatives --set java $(update-alternatives --list java | grep "java-$ver")
+            export PATH=/usr/lib/jvm/java-$ver-openjdk-amd64/bin:$PATH
+            export JAVA_HOME=/usr/lib/jvm/java-$ver-openjdk-amd64
         fi
     elif [ $(uname) == "Darwin" ]; then
-        export PATH=$(brew --prefix)/opt/openjdk@8/bin:$PATH CPPFLAGS="-I$(brew --prefix)/opt/openjdk@8/include"
+        export PATH=$(brew --prefix)/opt/openjdk@$ver/bin:$PATH CPPFLAGS="-I$(brew --prefix)/opt/openjdk@$ver/include"
     fi
 }
 
@@ -42,6 +43,9 @@ set_dir() {
 }
 
 set_git() {
+    if [ $(uname) == "Darwin" ]; then
+        read -n 1 -s -r -p "Press any key to continue..." && echo
+    fi
     git config user.name "github-actions[bot]"
     git config user.email "github-actions[bot]@users.noreply.github.com"
     git add .
