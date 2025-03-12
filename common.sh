@@ -2,7 +2,7 @@ SCRIPT_DIR=$(realpath $(dirname $0))
 
 if [ $(uname) == "Darwin" ]; then
     export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
-    export PATH=$(brew --prefix)/opt/gsed/libexec/gnubin:$PATH
+    export PATH=$(brew --prefix)/opt/sed/libexec/gnubin:$PATH
     export PATH=$(brew --prefix)/opt/openjdk@17/bin:$PATH
 fi
 
