@@ -4,6 +4,9 @@ if [ $(uname) == "Darwin" ]; then
     export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
     export PATH=$(brew --prefix)/opt/sed/libexec/gnubin:$PATH
     export PATH=$(brew --prefix)/opt/openjdk@17/bin:$PATH
+elif [ "${CI}" == "true" ]; then
+    ANDROID_HOME="/tmp/android-sdk"
+    export ANDROID_HOME
 fi
 
 replace() {
@@ -19,7 +22,7 @@ rename() {
 use_jdk() {
     ver=$1
     if [ $(uname) == "Linux" ]; then
-        if [ $(lsb_release -is) == "Ubuntu" ]; then
+        if [ $CI == "true" ] || [ $(lsb_release -is) == "Ubuntu" ]; then
             sudo umount /opt/hostedtoolcache
             sudo apt install -y openjdk-$ver-jdk
             sudo update-alternatives --set java $(update-alternatives --list java | grep "java-$ver")
@@ -81,11 +84,15 @@ update_metadata() {
     if ! [ -z $SUBMOD ]; then
         sed -i "s/submodules: false/submodules: true/g" .fdroid.yml
     fi
+
+    # get_source_date_epoch in fdroidserver/common.py expects metadata/$ID.yml
+    mkdir -p metadata
+    cp .fdroid.yml metadata/$ID.yml
 }
 
 publish() {
     # ./gradlew assembleRelease
-    fdroid build --skip-scan --no-tarball --no-refresh -W ignore
+    fdroid build --skip-scan --no-tarball --no-refresh -W warn
 
     source $SCRIPT_DIR/keys/local.properties
     storeFile=$SCRIPT_DIR/keys/test.jks

@@ -9,6 +9,14 @@ on:
       - app/**.sh
   workflow_dispatch:
     inputs:
+      runner:
+        description: 'Runner'
+        required: true
+        type: string
+        default: 'self-hosted'
+        options:
+          - ubuntu-latest
+          - self-hosted
       app_id:
         description: 'Application ID'
         required: true
@@ -18,7 +26,7 @@ on:
 
 jobs:
   setup:
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.runner || 'ubuntu-latest' }}
     outputs:
       matrix: ${{ steps.check.outputs.target }}
     steps:
@@ -46,7 +54,7 @@ jobs:
 
   publish:
     needs: setup
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.runner || 'ubuntu-latest' }}
     strategy:
       matrix: ${{fromJson(needs.setup.outputs.matrix)}}
     steps:
