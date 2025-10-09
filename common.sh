@@ -96,7 +96,7 @@ publish() {
 
     source $SCRIPT_DIR/keys/local.properties
     storeFile=$SCRIPT_DIR/keys/test.jks
-    $apksigner sign -verbose -ks $storeFile --ks-pass pass:$storePassword --key-pass pass:$keyPassword --ks-key-alias $keyAlias --out $SCRIPT_DIR/out/$ID.apk unsigned/$ID*.apk
+    $apksigner sign -verbose -ks $storeFile --ks-pass pass:$storePassword --key-pass pass:$keyPassword --ks-key-alias $keyAlias --out $SCRIPT_DIR/out/$ID.apk unsigned/$ID*.apk || exit 1
     # fdroid publish; mv repo/*.apk $SCRIPT_DIR/out
 
     cd $SCRIPT_DIR
